@@ -1,38 +1,21 @@
 package com.example.parkingLot.entities;
 
 import com.example.parkingLot.enums.VeichleType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.*;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
+@Table(name = "veichles")
 public class Veichle {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long veichleNumberPlate;
+    private String veichleNumber;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private VeichleType veichleType;
-
-    public Veichle(long veichleNumberPlate, VeichleType veichleType) {
-        this.veichleNumberPlate = veichleNumberPlate;
-        this.veichleType = veichleType;
-    }
-
-    public long getVeichleNumberPlate() {
-        return veichleNumberPlate;
-    }
-
-    public void setVeichleNumberPlate(long veichleNumberPlate) {
-        this.veichleNumberPlate = veichleNumberPlate;
-    }
-
-    public VeichleType getVeichleType() {
-        return veichleType;
-    }
-
-    public void setVeichleType(VeichleType veichleType) {
-        this.veichleType = veichleType;
-    }
 }
