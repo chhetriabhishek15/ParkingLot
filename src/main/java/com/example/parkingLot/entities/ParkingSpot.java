@@ -42,8 +42,7 @@ public class ParkingSpot {
     @Column(nullable = false)
     private boolean isOccupied = false;
 
-    @Transient
-    private AtomicBoolean occupiedFlag = new AtomicBoolean(false);
+    private Long version;
 
     private String currntVehicleNumber;
 
