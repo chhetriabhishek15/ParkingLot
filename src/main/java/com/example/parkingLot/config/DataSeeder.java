@@ -139,12 +139,63 @@ public class DataSeeder implements CommandLineRunner {
 
             logger.info("DataSeeder: ending assign a Spot...");
 
-            logger.info("DataSeeder: ending parking spot seeding...");
-            logger.info("DataSeeder: ending parking spot seeding...");
+            logger.info("DataSeeder: starting ticket seeding...");
 
-            logger.info("DataSeeder: ending parking spot seeding...");
-            logger.info("DataSeeder: ending parking spot seeding...");
+            // ----- Ticket -----
+            Ticket ticket = Ticket.builder()
+                    .vehicle(car)
+                    .parkingSpot(assignedSpot)
+                    .entryGateType(GateType.ENTRY)
+                    .entryTime(LocalDateTime.now().minusHours(2))
+                    .parkingTicketStatus(TicketStatus.ACTIVE)
+                    .fee(0.0)
+                    .build();
+            ticketRepository.save(ticket);
 
+            logger.info("DataSeeder: ending ticket seeding...");
+
+            logger.info("DataSeeder: starting payment seeding...");
+
+            // ----- Payment -----
+            Payment payment = Payment.builder()
+                    .amount(60.0)
+                    .paymentMethod(PaymentMethod.UPI)
+                    .paymentStatus(PaymentStatus.COMPLETED)
+                    .processedAt(LocalDateTime.now())
+                    .ticket(ticket)
+                    .build();
+            paymentRepository.save(payment);
+
+            ticket.setPayment(payment);
+            ticketRepository.save(ticket);
+
+            logger.info("DataSeeder: ending payment seeding...");
+
+            logger.info("DataSeeder: starting MaintenanceRecord seeding...");
+
+            // ----- Maintenance -----
+            MaintainanceBoard maintenance = MaintainanceBoard.builder()
+                    .parkingFloor(floor2)
+                    .reason("Routine cleaning")
+                    .startTime(LocalDateTime.now().minusDays(1))
+                    .endTime(LocalDateTime.now())
+                    .performedBy("TechTeam-A1")
+                    .build();
+            maintenanceRecordRepository.save(maintenance);
+            logger.info("DataSeeder: ending MaintenanceRecord seeding...");
+
+            logger.info("DataSeeder: starting DisplayBoard seeding...");
+
+            // ----- Display Board -----
+            DisplayBoard board = DisplayBoard.builder()
+                    .boardName("F1-Display")
+                    .updateChannel("MQTT-TOPIC-F1")
+                    .floor(floor1)
+                    .build();
+            displayBoardRepository.save(board);
+            logger.info("DataSeeder: ending DisplayBoard seeding...");
+
+            logger.info("✅ Dev seeding completed successfully.");
         } catch (Exception ex) {
             logger.error("DataSeeder: error during seeding", ex);
             throw ex;

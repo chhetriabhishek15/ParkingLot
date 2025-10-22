@@ -20,7 +20,7 @@ public class ParkingFloor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long floortId;
+    private Long floorId;
 
     @NotNull
     @Column(nullable = false)
