@@ -3,6 +3,8 @@ package com.example.parkingLot.entities;
 import com.example.parkingLot.enums.ParkingSpotStatus;
 import com.example.parkingLot.enums.ParkingSpotType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -15,21 +17,23 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AllArgsConstructor
 @Builder
 @Table(name = "parking_spots",
-indexes = {
-        @Index(name = "idx_spot_type",columnList = "parkingSpotType"),
-        @Index(name = "idx_spot_occupied", columnList = "isOccupied")
-})
+        indexes = {
+                @Index(name = "idx_spot_type", columnList = "spotType"),
+                @Index(name = "idx_spot_status", columnList = "parkingSpotStatus"),
+                @Index(name = "idx_spot_occupied", columnList = "isOccupied")
+        })
 public class ParkingSpot {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long spotId;
 
-    @Column(nullable = false)
+    @NotBlank
+    @Column(nullable = false, unique = true)
     private String spotNumber;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @NotNull
     private ParkingSpotType parkingSpotType;
 
     @Enumerated(EnumType.STRING)
@@ -41,7 +45,7 @@ public class ParkingSpot {
     @Transient
     private AtomicBoolean occupiedFlag = new AtomicBoolean(false);
 
-    private String currntVeichleNumber;
+    private String currntVehicleNumber;
 
     private LocalDateTime lastOccupiedAt;
 

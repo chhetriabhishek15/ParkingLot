@@ -1,6 +1,6 @@
 package com.example.parkingLot.enums;
 
-public enum VeichleType {
+public enum VehicleType {
     CAR,
     BIKE,
     BUS

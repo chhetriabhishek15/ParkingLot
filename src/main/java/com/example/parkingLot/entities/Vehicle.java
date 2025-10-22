@@ -1,10 +1,12 @@
 package com.example.parkingLot.entities;
 
-import com.example.parkingLot.enums.VeichleType;
+import com.example.parkingLot.enums.VehicleType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,16 +17,16 @@ import lombok.*;
 @Table(name = "vehicles",
 indexes = @Index(name = "idx_vehicle_type", columnList = "vehicleType")
 )
-public class Veichle {
+public class Vehicle {
     @Id
     @NotBlank
-    private String veichleNumber;
+    private String vehicleNumber;
 
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private VeichleType veichleType;
+    private VehicleType vehicleType;
 
-    @OneToMany(mappedBy = "veichle",cascade = {CascadeType.PERSIST, CascadeType.MERGE},fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "vehicle",cascade = {CascadeType.PERSIST, CascadeType.MERGE},fetch = FetchType.LAZY)
     private List<Ticket> ticketList;
 }
