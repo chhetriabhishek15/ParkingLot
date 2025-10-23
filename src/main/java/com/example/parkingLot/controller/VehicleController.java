@@ -45,16 +45,4 @@ public class VehicleController {
         vehicleService.delete(vehicleNumber);
         return ResponseEntity.noContent().build();
     }
-
-    @ExceptionHandler
-    public ResponseEntity<String> handleConflictException(ConflictException ex){
-        logger.error("Conflict error: {}", ex.getMessage());
-        return ResponseEntity.status(409).body(ex.getMessage());
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException ex){
-        logger.error("Resource not found: {}", ex.getMessage());
-        return ResponseEntity.status(404).body(ex.getMessage());
-    }
 }
