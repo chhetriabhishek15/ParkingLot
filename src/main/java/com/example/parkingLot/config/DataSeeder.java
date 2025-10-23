@@ -1,6 +1,6 @@
 package com.example.parkingLot.config;
 
-import com.example.parkingLot.entities.*;
+import com.example.parkingLot.entity.*;
 import com.example.parkingLot.enums.*;
 import com.example.parkingLot.repository.*;
 
@@ -15,10 +15,9 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 
-@Profile("dev")
+@Profile("test")
 @RequiredArgsConstructor
 @Component
 public class DataSeeder implements CommandLineRunner {

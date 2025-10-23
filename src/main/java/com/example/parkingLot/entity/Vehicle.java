@@ -1,4 +1,4 @@
-package com.example.parkingLot.entities;
+package com.example.parkingLot.entity;
 
 import com.example.parkingLot.enums.VehicleType;
 import jakarta.persistence.*;
