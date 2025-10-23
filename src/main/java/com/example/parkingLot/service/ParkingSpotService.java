@@ -114,6 +114,7 @@ public class ParkingSpotService {
         }
     }
 
+    @Transactional
     public ParkingSpotDto freeSpot(Long spotId) throws ResourceNotFoundException {
         ParkingSpot s = spotRepo.findById(spotId).
                 orElseThrow(() -> new ResourceNotFoundException("Spot not found: " + spotId));
