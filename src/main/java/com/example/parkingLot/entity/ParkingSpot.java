@@ -1,4 +1,4 @@
-package com.example.parkingLot.entities;
+package com.example.parkingLot.entity;
 
 import com.example.parkingLot.enums.ParkingSpotStatus;
 import com.example.parkingLot.enums.ParkingSpotType;
@@ -8,7 +8,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @Entity
 @Getter
@@ -18,7 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Builder
 @Table(name = "parking_spots",
         indexes = {
-                @Index(name = "idx_spot_type", columnList = "spotType"),
+                @Index(name = "idx_spot_type", columnList = "parkingSpotType"),
                 @Index(name = "idx_spot_status", columnList = "parkingSpotStatus"),
                 @Index(name = "idx_spot_occupied", columnList = "isOccupied")
         })
