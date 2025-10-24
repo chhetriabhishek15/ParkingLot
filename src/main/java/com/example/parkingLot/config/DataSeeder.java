@@ -173,7 +173,7 @@ public class DataSeeder implements CommandLineRunner {
             logger.info("DataSeeder: starting MaintenanceRecord seeding...");
 
             // ----- Maintenance -----
-            MaintainanceBoard maintenance = MaintainanceBoard.builder()
+            MaintenanceBoard maintenance = MaintenanceBoard.builder()
                     .parkingFloor(floor2)
                     .reason("Routine cleaning")
                     .startTime(LocalDateTime.now().minusDays(1))
