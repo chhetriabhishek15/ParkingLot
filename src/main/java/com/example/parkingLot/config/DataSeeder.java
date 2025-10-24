@@ -43,7 +43,7 @@ public class DataSeeder implements CommandLineRunner {
                 return;
             }
 
-            logger.info("DataSeeder: starting dev seeding...");
+            logger.info("DataSeeder: starting test seeding...");
 
             logger.info("DataSeeder: starting parking lot seeding...");
 
@@ -194,7 +194,7 @@ public class DataSeeder implements CommandLineRunner {
             displayBoardRepository.save(board);
             logger.info("DataSeeder: ending DisplayBoard seeding...");
 
-            logger.info("✅ Dev seeding completed successfully.");
+            logger.info("✅ Test seeding completed successfully.");
         } catch (Exception ex) {
             logger.error("DataSeeder: error during seeding", ex);
             throw ex;

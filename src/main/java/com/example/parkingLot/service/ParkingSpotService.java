@@ -5,15 +5,16 @@ import com.example.parkingLot.entity.*;
 import com.example.parkingLot.enums.*;
 import com.example.parkingLot.exception.*;
 import com.example.parkingLot.repository.*;
+import jakarta.persistence.OptimisticLockException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.*;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -81,6 +82,42 @@ public class ParkingSpotService {
     }
 
     @Transactional
+    public ParkingSpot occupySpotEntityWithRetry(Long spotId, String vehicleNumber, int maxAttempts)
+            throws ConflictException {
+        int attempts = 0;
+        while (attempts < maxAttempts) {
+            try {
+                ParkingSpot spot = spotRepo.findById(spotId)
+                        .orElseThrow(() -> new ResourceNotFoundException("Spot not found: " + spotId));
+
+                if (spot.isOccupied()) {
+                    throw new ConflictException("Spot already occupied: " + spotId);
+                }
+
+                spot.setOccupied(true);
+                spot.setCurrntVehicleNumber(vehicleNumber);
+                spot.setParkingSpotStatus(ParkingSpotStatus.OCCUPIED);
+                spot.setLastOccupiedAt(LocalDateTime.now());
+                ParkingSpot saved = spotRepo.saveAndFlush(spot);
+
+                logger.info("Occupied spot {} for vehicle {}", saved.getSpotNumber(), vehicleNumber);
+                return saved;
+
+            } catch (OptimisticLockException e) {
+                attempts++;
+                logger.warn("Optimistic lock conflict while occupying spot {}, attempt {}", spotId, attempts);
+                if (attempts >= maxAttempts) {
+                    throw new ConflictException("Failed to occupy spot after retries: " + spotId);
+                }
+            } catch (ResourceNotFoundException | ConflictException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        throw new ConflictException("Unable to occupy spot: " + spotId);
+    }
+
+
+    @Transactional
     public ParkingSpotDto occupySpotWithRetry(Long spotId, String vehicleNumber, int maxAttempts)
             throws ResourceNotFoundException, SpotAlreadyOccupiedException {
         int attempts = 0;
@@ -112,6 +149,18 @@ public class ParkingSpotService {
                 throw dae;
             }
         }
+    }
+
+    @Transactional
+    public void freeParkingSpot(Long spotId) throws ResourceNotFoundException {
+        ParkingSpot s = spotRepo.findById(spotId).
+                orElseThrow(() -> new ResourceNotFoundException("Spot not found: " + spotId));
+        s.setOccupied(false);
+        s.setParkingSpotStatus(ParkingSpotStatus.AVAILABLE);
+        s.setCurrntVehicleNumber(null);
+
+        ParkingSpot saved = spotRepo.save(s);
+        logger.info("Freed Parking spot {}", s.getSpotNumber());
     }
 
     @Transactional

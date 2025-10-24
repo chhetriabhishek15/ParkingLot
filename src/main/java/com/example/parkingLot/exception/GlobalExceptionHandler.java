@@ -34,6 +34,25 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(new ApiError("VALIDATION_ERROR", msg));
     }
 
+    @ExceptionHandler(SpotAlreadyOccupiedException.class)
+    public ResponseEntity<ApiError> handleSpotOccupied(SpotAlreadyOccupiedException ex) {
+        log.warn("Spot already occupied: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiError("SPOT_OCCUPIED", ex.getMessage()));
+    }
+
+    @ExceptionHandler(TicketNotFoundException.class)
+    public ResponseEntity<ApiError> handleTicketNotFound(TicketNotFoundException ex) {
+        log.warn("Ticket not found: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiError("TICKET_NOT_FOUND", ex.getMessage()));
+    }
+
+    @ExceptionHandler(TicketAlreadyClosedException.class)
+    public ResponseEntity<ApiError> handleTicketAlreadyClosed(TicketAlreadyClosedException ex) {
+        log.warn("Ticket already closed: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiError("TICKET_ALREADY_CLOSED", ex.getMessage()));
+    }
+
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> handleAll(Exception ex) {
         log.error("Unhandled exception", ex);
