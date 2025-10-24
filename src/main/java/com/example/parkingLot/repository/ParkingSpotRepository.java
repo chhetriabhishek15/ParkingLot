@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ParkingSpotRepository extends JpaRepository<ParkingSpot,Long>{
@@ -19,5 +20,9 @@ public interface ParkingSpotRepository extends JpaRepository<ParkingSpot,Long>{
             "AND s.isOccupied = false AND s.parkingSpotStatus = :status")
     List<ParkingSpot> findAvailableByTypeAndStatus(@Param("type") ParkingSpotType type,
                                                    @Param("status") ParkingSpotStatus status);
+
+    Optional<ParkingSpot> findFirstByParkingSpotTypeAndIsOccupiedFalseAndParkingSpotStatus(ParkingSpotType type,
+                                                                                           ParkingSpotStatus status);
+
 }
 
