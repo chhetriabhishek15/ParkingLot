@@ -1,5 +1,6 @@
 package com.example.parkingLot.entity;
 
+import com.example.parkingLot.enums.MaintenanceType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -15,10 +16,13 @@ import java.time.LocalDateTime;
 @Builder
 @Table(name = "maintenance_records",
         indexes = @Index(name = "idx_maintenance_start", columnList = "startTime"))
-public class MaintainanceBoard {
+public class MaintenanceBoard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long maintainanceId;
+    private Long maintenanceId;
+
+    @Enumerated(EnumType.STRING)
+    private MaintenanceType type;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "spot_id")
