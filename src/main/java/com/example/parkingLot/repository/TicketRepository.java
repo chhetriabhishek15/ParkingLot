@@ -14,4 +14,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
     Optional<Ticket> findByVehicle_VehicleNumberAndParkingTicketStatus(String vehicleNumber, TicketStatus status);
 
+    long countByParkingTicketStatus(TicketStatus status);
+
 }

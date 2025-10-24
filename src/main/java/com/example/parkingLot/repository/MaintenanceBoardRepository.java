@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MaintenanceBoardRepository extends JpaRepository<MaintenanceBoard, Long> {
+    long countByEndTimeIsNull();
 }
