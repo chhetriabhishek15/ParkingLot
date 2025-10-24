@@ -24,7 +24,7 @@ public class TicketService {
     private final VehicleRepository vehicleRepository;
     private final ParkingSpotRepository spotRepository;
     private final ParkingSpotService parkingSpotService;
-    private final PaymentRepository paymentRepository;
+    private final PaymentService paymentService;
 
 
     public TicketDto get(Long ticketId) throws TicketNotFoundException {
@@ -102,15 +102,7 @@ public class TicketService {
         double fee = FeeCalculator.calculateFee(ticket.getEntryTime(), exitTime,
                 ticket.getVehicle().getVehicleType());
 
-        Payment payment = Payment.builder()
-                .amount(fee)
-                .paymentMethod(req.getPaymentMethod())
-                .paymentStatus(PaymentStatus.COMPLETED)
-                .processedAt(LocalDateTime.now())
-                .ticket(ticket)
-                .build();
-
-        paymentRepository.save(payment);
+        Payment payment = paymentService.createPayment(ticket, fee, req.getPaymentMethod());
 
         ParkingSpot spot = ticket.getParkingSpot();
         parkingSpotService.freeParkingSpot(spot.getSpotId());
